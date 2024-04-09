@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>browser_thumbprint demo and test</title>
+  </head>
+  <body>
+    <h1>browser-thumbprint</h1>
+    <h5>Which browser is this? For push notification purposes</h5>
+
+    <h2 id="default"></h2>
+    <h2 id="hardwareOnly"></h2>
+    <h2 id="enableWebgl"></h2>
+
+    <script type="module">
+      import {Thumbprint} from "./Thumbprint";
+
+      const browserThumbprint = new Thumbprint();
+
+      // default params
+      (() => {
+        console.group('Default params');
+        const t0 = performance.now();
+        const fingerprint = browserThumbprint.get({ debug: true });
+        const t1 = performance.now();
+
+        const result = `Fingerprint: ${fingerprint} (computed in ${(t1 - t0).toFixed(0)} ms)`;
+        console.log(result);
+        document.getElementById('default').innerText = result;
+        console.groupEnd();
+      })();
+
+      // with hardwareOnly=true
+      (() => {
+        console.group('hardwareOnly=true');
+        const t0 = performance.now();
+        const fingerprint = browserThumbprint.get({ hardwareOnly: true, debug: true });
+        const t1 = performance.now();
+
+        const result = `Fingerprint with hardwareOnly=true: ${fingerprint} (computed in ${(t1 - t0).toFixed(0)} ms)`;
+        console.log(result);
+        document.getElementById('hardwareOnly').innerText = result;
+        console.groupEnd();
+      })();
+
+      // with enableWebgl=true
+      (() => {
+        console.group('enableWebgl=true');
+        const t0 = performance.now();
+        const fingerprint = browserThumbprint.get({ enableWebgl: true, debug: true });
+        const t1 = performance.now();
+
+        const result = `Fingerprint with enableWebgl=true: ${fingerprint} (computed in ${(t1 - t0).toFixed(0)} ms)`;
+        console.log(result);
+        document.getElementById('enableWebgl').innerText = result;
+        console.groupEnd();
+      })();
+    </script>
+  </body>
+</html>
