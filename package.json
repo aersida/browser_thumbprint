@@ -1,21 +1,18 @@
 {
   "name": "browser_thumbprint",
   "version": "1.0.0",
-  "description": "Browser thumbprint. Identify the browser to help manage PWA push notification subscriptions.",
+  "author": "Aersida",
   "module": "index.ts",
-  "scripts": {
-    "start": "bun run index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": ["browser", "thumbprint", "fingerprint", "browser thumbprint", "browser fingerprint", "PWA", "push", "push notification", "service worker"],
-  "author": "md8n",
-  "license": "MIT",
   "devDependencies": {
-    "typescript": "^5.4.3",
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "typescript": "^5.8.3",
+    "user-agent-data-types": "^0.4.2"
   },
-  "dependencies": {
-    "@types/ua-parser-js": "^0.7.39",
-    "ua-parser-js": "^1.0.37"
+  "description": "Browser thumbprint. Identify the browser to help manage PWA push notification subscriptions.",
+  "keywords": ["browser", "thumbprint", "fingerprint", "browser thumbprint", "browser fingerprint", "PWA", "push", "push notification", "service worker"],
+  "license": "MIT",
+  "scripts": {
+    "build": "bun build ./src/browser_thumbprint.ts --outdir ./out --minify",
+    "start": "bun run testserver.ts"
   }
 }

@@ -25,7 +25,7 @@ PWAs (Progressive Web Apps) are quite awesome. They let your web page function a
 But there's a catch - actually there's several. Here's an incomplete list:
 
 * Your user has to opt-in to push notifications. You can't just shove a notification at them without asking.
-* When you send your user a push notification is does not go directly to them, it goes via a service.
+* When you send your user a push notification, it does not go directly to them, it goes via a service.
 * To get this service to accept the push notification you have to include a special subscription token. And of course that token came from the user when they opted-in for push notifications.
 
 And ... what's written above is probaby like what you've already read about push notifications, and it's also largely false, because it's actually written from the wrong perspective.
@@ -35,7 +35,7 @@ And ... what's written above is probaby like what you've already read about push
     * The user gives permission to their browser to opt-in to push notifications.
 * When the user gives that permission, the browser gets back the subscription token from that service, and you need that token back on your server to send the push notifications.
 * Your server needs to keep track of the relationship between the user, their browsers, and each browser's subscription token.
-* Per browser and PWA (URL) no more than one subscription token will ever be valid at any given time.
+* Per browser and PWA (URL), no more than one subscription token will ever be valid at any given time.
 * Send too many push notifications using out-of-date or incorrect tokens and you can find all push notfications going via that service blocked. Because as far as the service is concerned, you're a spammer.
 * It's best to pre-emptively remove/deprecate subscription tokens you know to be out-of-date or invalid rather than throwing them at the service and seeing if they fail. Because every failure counts towards the limits imposed by the service - and they can (and do) change those limits. 
 
