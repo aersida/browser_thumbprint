@@ -1,59 +1,76 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <title>browser_thumbprint demo and test</title>
-  </head>
-  <body>
+</head>
+
+<body>
     <h1>browser-thumbprint</h1>
     <h5>Which browser is this? For push notification purposes</h5>
 
     <h2 id="default"></h2>
-    <h2 id="hardwareOnly"></h2>
-    <h2 id="enableWebgl"></h2>
+    <!-- <h2 id="hardwareOnly"></h2>
+    <h2 id="enableWebgl"></h2> -->
 
     <script type="module">
-      import {Thumbprint} from "./Thumbprint";
+        import { initialiseThumbprint } from "./PlatformDetection";
+        import { x64hash128 } from "./utilities/MurmurHashDerived";
 
-      const browserThumbprint = new Thumbprint();
+        let thumbprint = "";
 
-      // default params
-      (() => {
-        console.group('Default params');
-        const t0 = performance.now();
-        const fingerprint = browserThumbprint.get({ debug: true });
-        const t1 = performance.now();
+        const storeThumbprint = (components) => {
+            const values = components.map((component) => {
+                return component.value;
+            });
+            const murmur = x64hash128(values.join(""), 31);
+            thumbprint = murmur;
 
-        const result = `Fingerprint: ${fingerprint} (computed in ${(t1 - t0).toFixed(0)} ms)`;
-        console.log(result);
-        document.getElementById('default').innerText = result;
-        console.groupEnd();
-      })();
+            const result = `Thumbprint: ${thumbprint}`;
+            document.getElementById('default').innerText = result;
+        };
 
-      // with hardwareOnly=true
-      (() => {
-        console.group('hardwareOnly=true');
-        const t0 = performance.now();
-        const fingerprint = browserThumbprint.get({ hardwareOnly: true, debug: true });
-        const t1 = performance.now();
+        // options["debug"] = true;
 
-        const result = `Fingerprint with hardwareOnly=true: ${fingerprint} (computed in ${(t1 - t0).toFixed(0)} ms)`;
-        console.log(result);
-        document.getElementById('hardwareOnly').innerText = result;
-        console.groupEnd();
-      })();
 
-      // with enableWebgl=true
-      (() => {
-        console.group('enableWebgl=true');
-        const t0 = performance.now();
-        const fingerprint = browserThumbprint.get({ enableWebgl: true, debug: true });
-        const t1 = performance.now();
+        // default params
+        (() => {
+            console.group('Default params');
+            const t0 = performance.now();
+            initialiseThumbprint(storeThumbprint);
+            const t1 = performance.now();
 
-        const result = `Fingerprint with enableWebgl=true: ${fingerprint} (computed in ${(t1 - t0).toFixed(0)} ms)`;
-        console.log(result);
-        document.getElementById('enableWebgl').innerText = result;
-        console.groupEnd();
-      })();
+            console.groupEnd();
+        })();
+
+        // // with hardwareOnly=true
+        // (() => {
+        //     options["hardwareOnly"] = true;
+        //     console.group('hardwareOnly=true');
+        //     const t0 = performance.now();
+        //     const fingerprint = browserThumbprint.get(options, storeFingerprint);
+        //     const t1 = performance.now();
+
+        //     const result = `Fingerprint with hardwareOnly=true: ${fingerprint} (computed in ${(t1 - t0).toFixed(0)} ms)`;
+        //     console.log(result);
+        //     document.getElementById('hardwareOnly').innerText = result;
+        //     console.groupEnd();
+        // })();
+
+        // // with enableWebgl=true
+        // (() => {
+        //     options["enableWebgl"] = true;
+        //     console.group('enableWebgl=true');
+        //     const t0 = performance.now();
+        //     const fingerprint = browserThumbprint.get(options, storeFingerprint);
+        //     const t1 = performance.now();
+
+        //     const result = `Fingerprint with enableWebgl=true: ${fingerprint} (computed in ${(t1 - t0).toFixed(0)} ms)`;
+        //     console.log(result);
+        //     document.getElementById('enableWebgl').innerText = result;
+        //     console.groupEnd();
+        // })();
     </script>
-  </body>
+</body>
+
 </html>

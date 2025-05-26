@@ -1,72 +1,23 @@
-import { UAParser } from "ua-parser-js";
+import type { TBrowser } from "./types/PlatformTypes";
+import type { ThumbPrintCallBack } from "types/UAParseResultType";
 
-import type {
-    tpComponent,
-    IdleRequestCallback,
-    IdleRequestOptions,
-    RequestIdleCallbackHandle,
-    TBrowser,
-    TPlatform,
-} from "./types/PlatformTypes";
+import { UAParser } from "./utilities/UAParser";
 
-import { x64hash128 } from "./utilities/MurmurHashDerived";
 import { Thumbprint } from "./Thumbprint";
 
-
-export function getPlatform(): TPlatform {
-    return {
-        browser: getBrowser(),
-        inPWAMode: inPWAMode(),
-    };
-}
-
-/**
- * Get the browser name and version number
- * @remarks Note that this does NOT support IE (Internet Explorer)
- * and neither does Microsoft.
- */
-export function getBrowser(): TBrowser {
-    const ua = navigator.userAgent;
-
-    const parser = new UAParser(ua);
-    const browser = parser.getBrowser();
-    const os = parser.getOS();
-    const device = parser.getDevice();
-
-    return {
-        name: browser.name,
-        version: browser.version,
-        os: os,
-        device: device,
-    } as TBrowser;
-}
-
-/**
- * This declaration is needed because the definition for `requestIdleCallback
- * is not yet correctly implemented in lib.dom.d.ts
- */
-declare global {
-    interface Window {
-        requestIdleCallback: (
-            callback: IdleRequestCallback,
-            options?: IdleRequestOptions
-        ) => RequestIdleCallbackHandle;
-        cancelIdleCallback: (handle: RequestIdleCallbackHandle) => void;
-    }
-}
-
-export const initialiseThumbprint = (): void => {
+export const initialiseThumbprint = (tpCallBack: ThumbPrintCallBack): void => {
     const options: Record<string, any> = {
         preprocessor: (key: string, value: any) => {
             if (key == "userAgent") {
                 const parser = new UAParser(value);
-                const device = parser.getDevice();
+                const result = parser.result;
+                const device = result.device;
                 const userAgentMinusVersion = [
                     `${device.vendor}:${device.type}:${device.model}`,
-                    parser.getCPU().architecture,
-                    parser.getOS().name,
-                    parser.getEngine().name,
-                    parser.getBrowser().name,
+                    result.cpu.architecture,
+                    result.os.name,
+                    result.engine.name,
+                    result.browser.name,
                 ].join("|");
 
                 return userAgentMinusVersion;
@@ -79,23 +30,17 @@ export const initialiseThumbprint = (): void => {
             enumerateDevices: true,
         },
     };
-    const storeThumbprint = (components: tpComponent[]) => {
-        const values = components.map((component: tpComponent) => {
-            return component.value;
-        });
-        const murmur = x64hash128(values.join(""), 31);
-        // This was going to a redux store
-        storeThumbprintHash(murmur);
-    };
+
     const browserThumbprint = new Thumbprint();
+
     if (window.requestIdleCallback) {
         window.requestIdleCallback(() => {
-            browserThumbprint.get(options, storeThumbprint);
+            browserThumbprint.get(options, tpCallBack);
         });
     } else {
         // This is required for Safari
         setTimeout(() => {
-            browserThumbprint.get(options, storeThumbprint);
+            browserThumbprint.get(options, tpCallBack);
         }, 500);
     }
 }
@@ -107,6 +52,6 @@ export function isWebkit(browser: TBrowser): boolean {
     );
 }
 
-function inPWAMode(): boolean {
+export function inPWAMode(): boolean {
     return window.matchMedia("(display-mode: standalone)").matches;
 }
