@@ -18,6 +18,58 @@ For those looking to use a 'browser fingerprint' as a proxy for identifying a us
 
 For those of you still here, welcome, let's get on with things.
 
+## Installation
+| Your preferred installer | Command |
+| :------------------- | ----------: |
+| npm             | `npm i browser_thumbprint` |
+| yarn            | `yarn add browser_thumbprint` |
+| pnpm            | `pnpm add browser_thumbprint` |
+| bun             | `bun add browser_thumbprint` |
+
+## Usage
+
+`browser_thumbprint` is only intended to run in the browser.
+
+`setThumbprint()` is intended to execute when the browser is idle. So there will always be some short delay.
+
+The minimum delay will depend on multiple factors related to whichever browser is executing this code. Minimum can be as little as 20ms, but 600ms is recommended for almost all browsers.
+
+If `getThumbprint()` is called too early (for this browser to have finished running `setThumbprint()`) then it will return an empty string. So you can use a simple falsey test to identify this situation.
+
+If `getThumbprint()` returns a non-empty string this is a 'thumbprint' that you can use to consistently identify this browser.
+
+Occasionally, if the user makes some significant change to their browser and/or OS settings then a new thumbprint may result. If that happens then the previous browser thumbprint will be invalid, and any push notfication token associated with it will be rendered unusable. You should always check for this scenario and if necessary request a new push notification token from the browser.
+
+### Example
+``` javascript
+import { getThumbprint, setThumbprint } from "browser_thumbprint";
+
+setThumbprint();
+
+setTimeout(() => {
+    const thumbprint = getThumbprint();
+    if (!thumbprint) {
+        console.warn("This browser needs more time to set the thumbprint");
+    }
+    // Now that you have your thumbprint you need to get it to your server somehow
+    // The browser thumbprint will need to be recorded with the push notification subscription token returned by this browser on your server.
+}, 600);
+```
+
+### Service Workers and Push Notifications
+
+I would strongly recommend that you check out [Mozilla's documentation on Service Workers](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers) for an overview.
+
+The basic process to subscribe to push notifications, not allowing for revoked permissions for subscriptions etc., is as follows:
+* get the service worker
+* ask for any existing subscription token, or
+* ask for a new subscription token
+  * ask the server for its VAPID key details
+  * using the server's public key, ask the service worker to subscribe to get a new subscription token
+* send the subscription token details plus the browser thumbprint (plus some other info) back to the server, for it to use for push notifications
+
+This is glossing over an enormous amount of detail.
+
 ## PWAs and Push Notifications
 
 PWAs (Progressive Web Apps) are quite awesome. They let your web page function as an app that the user can 'install', and that app has powers that a regular web page does not, including supporting push notifications.
