@@ -1,5 +1,5 @@
 const serverName = "Browser Thumbprint test server";
-const ixHtml = "/index.html";
+const ixHtml = "index.html";
 const transpiler = new Bun.Transpiler({
     loader: "ts", // "js | "jsx" | "ts" | "tsx"
     target: "browser"

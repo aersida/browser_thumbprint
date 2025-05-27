@@ -185,59 +185,32 @@ export function x64hash128(key: string, seed: number): string {
     k2 = [0, 0];
 
     switch (remainder) {
-        case 15:
-            k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 14)], 48));
-        // fallthrough
-        case 14:
-            k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 13)], 40));
-        // fallthrough
-        case 13:
-            k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 12)], 32));
-        // fallthrough
-        case 12:
-            k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 11)], 24));
-        // fallthrough
-        case 11:
-            k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 10)], 16));
-        // fallthrough
-        case 10:
-            k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 9)], 8));
-        // fallthrough
+        case 15: k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 14)], 48));
+        case 14: k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 13)], 40));
+        case 13: k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 12)], 32));
+        case 12: k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 11)], 24));
+        case 11: k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 10)], 16));
+        case 10: k2 = x64Xor(k2, x64LeftShift([0, key.charCodeAt(i + 9)], 8));
         case 9:
             k2 = x64Xor(k2, [0, key.charCodeAt(i + 8)]);
             k2 = x64Multiply(k2, c2);
             k2 = x64Rotl(k2, 33);
             k2 = x64Multiply(k2, c1);
             h2 = x64Xor(h2, k2);
-        // fallthrough
-        case 8:
-            k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 7)], 56));
-        // fallthrough
-        case 7:
-            k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 6)], 48));
-        // fallthrough
-        case 6:
-            k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 5)], 40));
-        // fallthrough
-        case 5:
-            k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 4)], 32));
-        // fallthrough
-        case 4:
-            k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 3)], 24));
-        // fallthrough
-        case 3:
-            k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 2)], 16));
-        // fallthrough
-        case 2:
-            k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 1)], 8));
-        // fallthrough
+        case 8: k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 7)], 56));
+        case 7: k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 6)], 48));
+        case 6: k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 5)], 40));
+        case 5: k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 4)], 32));
+        case 4: k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 3)], 24));
+        case 3: k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 2)], 16));
+        case 2: k1 = x64Xor(k1, x64LeftShift([0, key.charCodeAt(i + 1)], 8));
         case 1:
             k1 = x64Xor(k1, [0, key.charCodeAt(i)]);
             k1 = x64Multiply(k1, c1);
             k1 = x64Rotl(k1, 31);
             k1 = x64Multiply(k1, c2);
             h1 = x64Xor(h1, k1);
-        // fallthrough
+            break;
     }
 
     h1 = x64Xor(h1, [0, key.length]);

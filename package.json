@@ -1,8 +1,11 @@
 {
   "name": "browser_thumbprint",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "author": "Aersida",
-  "module": "index.ts",
+  "browser": "dist/browser_thumbprint.js",
+  "main": "dist/browser_thumbprint.js",
+  "type": "module",
+  "files": ["dist/browser_thumbprint.*", "README.md"],
   "devDependencies": {
     "@types/bun": "latest",
     "typescript": "^5.8.3",
@@ -12,7 +15,9 @@
   "keywords": ["browser", "thumbprint", "fingerprint", "browser thumbprint", "browser fingerprint", "PWA", "push", "push notification", "service worker"],
   "license": "MIT",
   "scripts": {
-    "build": "bun build ./src/browser_thumbprint.ts --outdir ./out --minify",
-    "start": "bun run testserver.ts"
+    "build": "bun run build:ts && bun run build:bun",
+    "build:ts": "tsc --outdir ./dist --module ESNext --target ES2020 --allowImportingTsExtensions false --noEmit false --declaration --strict --emitDeclarationOnly",
+    "build:bun": "bun build ./src/browser_thumbprint.ts --outdir ./dist --minify",
+    "start": "bun run ./src/testserver/index.ts"
   }
 }

@@ -13,7 +13,14 @@ Source : https://github.com/faisalman/ua-parser-js */
 
 import type { RegexMap, RegexMaps, RegexPropFunc } from "types/RegexMapType";
 
-import { bnd, dev, os, spc, types, vnd } from "./UAConstants";
+import {
+    // bnd,
+    dev,
+    os,
+    spc,
+    types,
+    // vnd
+} from "./UAConstants";
 import { clean, regexMaps } from "./UARegexMaps";
 import type { UAParseResult } from "types/UAParseResultType";
 

@@ -36,7 +36,7 @@ export const initialiseThumbprint = (tpCallBack: ThumbPrintCallBack): void => {
     if (window.requestIdleCallback) {
         window.requestIdleCallback(() => {
             browserThumbprint.get(options, tpCallBack);
-        });
+        }, { timeout: 100 });
     } else {
         // This is required for Safari
         setTimeout(() => {
