@@ -1,6 +1,6 @@
 {
   "name": "browser_thumbprint",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": "Aersida",
   "browser": "dist/browser_thumbprint.js",
   "main": "dist/browser_thumbprint.js",
